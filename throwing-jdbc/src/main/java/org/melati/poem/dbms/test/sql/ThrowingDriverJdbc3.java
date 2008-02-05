@@ -2,7 +2,7 @@
  * $Source$
  * $Revision$
  *
- * Copyright (C) 2007 Tim Pizey
+ * Copyright (C) 2008 Tim Pizey
  *
  * Part of Melati (http://melati.org), a framework for the rapid
  * development of clean, maintainable web applications.
@@ -41,60 +41,87 @@
  *     Tim Pizey <timp At paneris.org>
  *     http://paneris.org/~timp
  */
+
 package org.melati.poem.dbms.test.sql;
 
+import java.sql.Connection;
 import java.sql.Driver;
-
+import java.sql.DriverPropertyInfo;
+import java.sql.SQLException;
+import java.util.Properties;
 
 /**
- * A {@link Driver} decorated with a {@link Thrower}.
  * @author timp
- * @since 22 Feb 2007
+ * @since  5 Feb 2008
  *
  */
-public class ThrowingDriver 
-    extends ThrowingDriverVariant 
+public abstract class ThrowingDriverJdbc3 
+    extends Thrower 
     implements Driver {
 
-  final static String className = ThrowingDriver.class.getName() + ".";
-  
+  Driver it = null;
+
+
   /**
-   * @param methodName the name of the method to set to start to throw
+   * {@inheritDoc}
+   * @see java.sql.Driver#acceptsURL(java.lang.String)
    */
-  public static void startThrowing(String methodName) {
-    Thrower.startThrowing(className  +  methodName);
+  public boolean acceptsURL(String url) throws SQLException {
+    if (shouldThrow("acceptsURL"))
+      throw new SQLException("Driver bombed");
+    return it.acceptsURL(url);
   }
-  
+
   /**
-   * @param methodName the name of the method to set to start to throw
-   * @param goes the number of invocations before throwing should be happen
+   * Return the decorated Connection.
+   * {@inheritDoc}
+   * @see java.sql.Driver#connect(java.lang.String, java.util.Properties)
    */
-  public static void startThrowingAfter(String methodName, int goes) {
-    Thrower.startThrowingAfter(className  +  methodName, goes);
+  public Connection connect(String url, Properties info) throws SQLException {
+    if (shouldThrow("connect"))
+      throw new SQLException("Driver bombed");
+    return new ThrowingConnection(it.connect(url, info));
   }
-  /**
-   * @param methodName the name of the method to set to no longer throw
+
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Driver#getMajorVersion()
    */
-  public static void stopThrowing(String methodName) {
-    Thrower.stopThrowing(className  +  methodName);
+
+  public int getMajorVersion() {
+    return it.getMajorVersion();
   }
-  
-  /**
-   * @param methodName the name of the method to check
-   * @return whether the named method should throw an exception
+
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Driver#getMinorVersion()
    */
-  public static boolean shouldThrow(String methodName) { 
-    return Thrower.shouldThrow(className  +  methodName);
+
+  public int getMinorVersion() {
+    return it.getMinorVersion();
+  }
+
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Driver#jdbcCompliant()
+   */
+
+  public boolean jdbcCompliant() {
+    return it.jdbcCompliant();
+  }
+
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Driver#getPropertyInfo(java.lang.String, java.util.Properties)
+   */
+
+  public DriverPropertyInfo[] getPropertyInfo(String url, Properties info)
+          throws SQLException {
+    if (shouldThrow("getPropertyInfo"))
+      throw new SQLException("Driver bombed");
+    return it.getPropertyInfo(url, info);
   }
 
   
-  /**
-   * Constructor.
-   * @param d the driver to decorate
-   */
-  public ThrowingDriver(Driver d) {
-    it = d;
-  }
-
   
 }

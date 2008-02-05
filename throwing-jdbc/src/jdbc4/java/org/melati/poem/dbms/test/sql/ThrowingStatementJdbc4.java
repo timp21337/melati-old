@@ -44,39 +44,68 @@
 
 package org.melati.poem.dbms.test.sql;
 
-import java.sql.Clob;
+import java.sql.SQLException;
 
 /**
  * @author timp
- * @since 5 Feb 2008
+ * @since  5 Feb 2008
  *
  */
-public class ThrowingClob 
-    extends ThrowingClobVariant 
-    implements Clob {
-
-  final static String className = ThrowingClob.class.getName() + ".";
-  
-  public static void startThrowing(String methodName) {
-    Thrower.startThrowing(className  +  methodName);
-  }
-  public static void startThrowingAfter(String methodName, int goes) {
-    Thrower.startThrowingAfter(className  +  methodName, goes);
-  }
-  public static void stopThrowing(String methodName) {
-    Thrower.stopThrowing(className  +  methodName);
-  }
-  public static boolean shouldThrow(String methodName) { 
-    return Thrower.shouldThrow(className  +  methodName);
-  }
-
-  
-
+public abstract class ThrowingStatementJdbc4 extends ThrowingStatementJdbc3 {
   /**
-   * Constructor.
+   *  JDBC 4.0
    */
-  public ThrowingClob(Clob c) {
-    it = c;
+  
+    
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Statement#isClosed()
+   */
+
+  public boolean isClosed() throws SQLException {
+    if (shouldThrow("isClosed"))
+      throw new SQLException("Statement bombed");
+    return it.isClosed();
+  }
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Statement#isPoolable()
+   */
+
+  public boolean isPoolable() throws SQLException {
+    if (shouldThrow("isPoolable"))
+      throw new SQLException("Statement bombed");
+    return it.isPoolable();
+  }
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Statement#setPoolable(boolean)
+   */
+
+  public void setPoolable(boolean poolable) throws SQLException {
+    if (shouldThrow("setPoolable"))
+      throw new SQLException("Statement bombed");
+    it.setPoolable(poolable);
+  }
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Wrapper#isWrapperFor(java.lang.Class)
+   */
+
+  public boolean isWrapperFor(Class<?> iface) throws SQLException {
+    if (shouldThrow("isWrapperFor"))
+      throw new SQLException("Statement bombed");
+    return it.isWrapperFor(iface);
+  }
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Wrapper#unwrap(java.lang.Class)
+   */
+
+  public <T> T unwrap(Class<T> iface) throws SQLException {
+    if (shouldThrow("unwrap"))
+      throw new SQLException("Statement bombed");
+    return it.unwrap(iface);
   }
 
 

@@ -44,39 +44,34 @@
 
 package org.melati.poem.dbms.test.sql;
 
-import java.sql.Clob;
+import java.io.InputStream;
+import java.sql.SQLException;
 
 /**
  * @author timp
- * @since 5 Feb 2008
+ * @since  5 Feb 2008
  *
  */
-public class ThrowingClob 
-    extends ThrowingClobVariant 
-    implements Clob {
+public abstract class ThrowingBlobJdbc4 extends ThrowingBlobJdbc3 {
 
-  final static String className = ThrowingClob.class.getName() + ".";
-  
-  public static void startThrowing(String methodName) {
-    Thrower.startThrowing(className  +  methodName);
-  }
-  public static void startThrowingAfter(String methodName, int goes) {
-    Thrower.startThrowingAfter(className  +  methodName, goes);
-  }
-  public static void stopThrowing(String methodName) {
-    Thrower.stopThrowing(className  +  methodName);
-  }
-  public static boolean shouldThrow(String methodName) { 
-    return Thrower.shouldThrow(className  +  methodName);
-  }
-
-  
-
-  /**
-   * Constructor.
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Blob#free()
    */
-  public ThrowingClob(Clob c) {
-    it = c;
+  public void free() throws SQLException {
+    if (shouldThrow("free"))
+      throw new SQLException("Blob bombed");
+    it.free();
+  }
+
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Blob#getBinaryStream(long, long)
+   */
+  public InputStream getBinaryStream(long pos, long length) throws SQLException {
+    if (shouldThrow("getBinaryStream"))
+      throw new SQLException("Blob bombed");
+    return it.getBinaryStream();
   }
 
 

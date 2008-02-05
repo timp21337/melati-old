@@ -44,39 +44,39 @@
 
 package org.melati.poem.dbms.test.sql;
 
+import java.io.Reader;
 import java.sql.Clob;
+import java.sql.SQLException;
 
 /**
  * @author timp
- * @since 5 Feb 2008
+ * @since  5 Feb 2008
  *
  */
-public class ThrowingClob 
-    extends ThrowingClobVariant 
+public abstract class ThrowingClobJdbc4 
+    extends ThrowingClobJdbc3 
     implements Clob {
-
-  final static String className = ThrowingClob.class.getName() + ".";
   
-  public static void startThrowing(String methodName) {
-    Thrower.startThrowing(className  +  methodName);
-  }
-  public static void startThrowingAfter(String methodName, int goes) {
-    Thrower.startThrowingAfter(className  +  methodName, goes);
-  }
-  public static void stopThrowing(String methodName) {
-    Thrower.stopThrowing(className  +  methodName);
-  }
-  public static boolean shouldThrow(String methodName) { 
-    return Thrower.shouldThrow(className  +  methodName);
-  }
-
-  
-
-  /**
-   * Constructor.
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Clob#free()
    */
-  public ThrowingClob(Clob c) {
-    it = c;
+
+  public void free() throws SQLException {
+    if (shouldThrow("free"))
+      throw new SQLException("Clob bombed");
+    it.free();
+  }
+
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Clob#getCharacterStream(long, long)
+   */
+
+  public Reader getCharacterStream(long pos, long length) throws SQLException {
+    if (shouldThrow("getCharacterStream"))
+      throw new SQLException("Clob bombed");
+    return it.getCharacterStream(pos, length);
   }
 
 

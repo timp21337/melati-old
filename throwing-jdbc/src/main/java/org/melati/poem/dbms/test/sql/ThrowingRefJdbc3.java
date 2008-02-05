@@ -44,39 +44,61 @@
 
 package org.melati.poem.dbms.test.sql;
 
-import java.sql.Clob;
+import java.sql.Ref;
+import java.sql.SQLException;
+import java.util.Map;
 
 /**
  * @author timp
- * @since 5 Feb 2008
+ * @since  5 Feb 2008
  *
  */
-public class ThrowingClob 
-    extends ThrowingClobVariant 
-    implements Clob {
+public class ThrowingRefJdbc3 extends Thrower implements Ref {
 
-  final static String className = ThrowingClob.class.getName() + ".";
-  
-  public static void startThrowing(String methodName) {
-    Thrower.startThrowing(className  +  methodName);
-  }
-  public static void startThrowingAfter(String methodName, int goes) {
-    Thrower.startThrowingAfter(className  +  methodName, goes);
-  }
-  public static void stopThrowing(String methodName) {
-    Thrower.stopThrowing(className  +  methodName);
-  }
-  public static boolean shouldThrow(String methodName) { 
-    return Thrower.shouldThrow(className  +  methodName);
-  }
+  Ref it = null;
 
-  
-
-  /**
-   * Constructor.
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Ref#getBaseTypeName()
    */
-  public ThrowingClob(Clob c) {
-    it = c;
+
+  public String getBaseTypeName() throws SQLException {
+    if (shouldThrow("getBaseTypeName"))
+      throw new SQLException("Ref bombed");
+    return it.getBaseTypeName();
+  }
+
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Ref#getObject()
+   */
+
+  public Object getObject() throws SQLException {
+    if (shouldThrow("getObject"))
+      throw new SQLException("Ref bombed");
+    return it.getObject();
+  }
+
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Ref#getObject(java.util.Map)
+   */
+
+  public Object getObject(Map map) throws SQLException {
+    if (shouldThrow("getObject"))
+      throw new SQLException("Ref bombed");
+    return it.getObject();
+  }
+
+  /** 
+   * {@inheritDoc}
+   * @see java.sql.Ref#setObject(java.lang.Object)
+   */
+
+  public void setObject(Object value) throws SQLException {
+    if (shouldThrow("setObject"))
+      throw new SQLException("Ref bombed");
+    it.setObject(value);
   }
 
 

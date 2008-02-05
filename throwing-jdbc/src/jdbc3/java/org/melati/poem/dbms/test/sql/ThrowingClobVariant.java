@@ -41,43 +41,14 @@
  *     Tim Pizey <timp At paneris.org>
  *     http://paneris.org/~timp
  */
-
 package org.melati.poem.dbms.test.sql;
-
-import java.sql.Clob;
 
 /**
  * @author timp
  * @since 5 Feb 2008
- *
+ * From src/jdbc3
  */
-public class ThrowingClob 
-    extends ThrowingClobVariant 
-    implements Clob {
-
-  final static String className = ThrowingClob.class.getName() + ".";
-  
-  public static void startThrowing(String methodName) {
-    Thrower.startThrowing(className  +  methodName);
-  }
-  public static void startThrowingAfter(String methodName, int goes) {
-    Thrower.startThrowingAfter(className  +  methodName, goes);
-  }
-  public static void stopThrowing(String methodName) {
-    Thrower.stopThrowing(className  +  methodName);
-  }
-  public static boolean shouldThrow(String methodName) { 
-    return Thrower.shouldThrow(className  +  methodName);
-  }
-
-  
-
-  /**
-   * Constructor.
-   */
-  public ThrowingClob(Clob c) {
-    it = c;
-  }
+public abstract class ThrowingClobVariant extends ThrowingClobJdbc3 {
 
 
 }
